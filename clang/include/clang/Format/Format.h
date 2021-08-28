@@ -1949,6 +1949,20 @@ struct FormatStyle {
   /// \endcode
   bool Cpp11BracedListStyle;
 
+  /// \brief If there is a break after the opening parenthesis, also break
+  /// before the closing parenthesis
+  /// \code
+  ///   true:
+  ///   someLongFunction(
+  ///       argument1, argument2
+  ///   );
+  ///
+  ///   false:
+  ///   someLongFunction(
+  ///       argument1, argument2);
+  /// \endcode
+  bool DanglingParenthesis;
+
   /// \brief Analyze the formatted file for the most used line ending (``\r\n``
   /// or ``\n``). ``UseCRLF`` is only used as a fallback if none can be derived.
   bool DeriveLineEnding;

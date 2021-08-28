@@ -639,6 +639,7 @@ template <> struct MappingTraits<FormatStyle> {
                    Style.ConstructorInitializerIndentWidth);
     IO.mapOptional("ContinuationIndentWidth", Style.ContinuationIndentWidth);
     IO.mapOptional("Cpp11BracedListStyle", Style.Cpp11BracedListStyle);
+    IO.mapOptional("DanglingParenthesis", Style.DanglingParenthesis);
     IO.mapOptional("DeriveLineEnding", Style.DeriveLineEnding);
     IO.mapOptional("DerivePointerAlignment", Style.DerivePointerAlignment);
     IO.mapOptional("DisableFormat", Style.DisableFormat);
@@ -1038,6 +1039,7 @@ FormatStyle getLLVMStyle(FormatStyle::LanguageKind Language) {
   LLVMStyle.ConstructorInitializerIndentWidth = 4;
   LLVMStyle.ContinuationIndentWidth = 4;
   LLVMStyle.Cpp11BracedListStyle = true;
+  LLVMStyle.DanglingParenthesis = false;
   LLVMStyle.DeriveLineEnding = true;
   LLVMStyle.DerivePointerAlignment = false;
   LLVMStyle.EmptyLineAfterAccessModifier = FormatStyle::ELAAMS_Never;
@@ -1159,6 +1161,7 @@ FormatStyle getGoogleStyle(FormatStyle::LanguageKind Language) {
   GoogleStyle.AlwaysBreakBeforeMultilineStrings = true;
   GoogleStyle.AlwaysBreakTemplateDeclarations = FormatStyle::BTDS_Yes;
   GoogleStyle.ConstructorInitializerAllOnOneLineOrOnePerLine = true;
+  GoogleStyle.DanglingParenthesis = false;
   GoogleStyle.DerivePointerAlignment = true;
   GoogleStyle.IncludeStyle.IncludeCategories = {{"^<ext/.*\\.h>", 2, 0, false},
                                                 {"^<.*\\.h>", 1, 0, false},
