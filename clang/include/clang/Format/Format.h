@@ -1991,6 +1991,20 @@ struct FormatStyle {
   /// Disables formatting completely.
   bool DisableFormat;
 
+  /// \brief The outermost argument list gets a double indentation.
+  /// \code
+  ///   true:
+  ///   someLongFunction(
+  ///       someLongFunction2(
+  ///         argument1, argument2));
+  ///
+  ///   false:
+  ///   someLongFunction(
+  ///     someLongFunction2(
+  ///       argument1, argument2));
+  /// \endcode
+  bool DoubleIndentOutermostArgumentList;
+
   /// Different styles for empty line after access modifiers.
   /// ``EmptyLineBeforeAccessModifier`` configuration handles the number of
   /// empty lines between two access modifiers.

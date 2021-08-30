@@ -2240,6 +2240,21 @@ the configuration (without a prefix: ``Auto``).
 **DisableFormat** (``bool``)
   Disables formatting completely.
 
+**DoubleIndentOutermostArgumentList** (``bool``)
+  The outermost argument list gets a double indentation.
+
+  .. code-block:: c++
+
+    true:
+    someLongFunction(
+        someLongFunction2(
+          argument1, argument2));
+
+    false:
+    someLongFunction(
+      someLongFunction2(
+        argument1, argument2));
+
 **EmptyLineAfterAccessModifier** (``EmptyLineAfterAccessModifierStyle``)
   Defines when to put an empty line after access modifiers.
   ``EmptyLineBeforeAccessModifier`` configuration handles the number of

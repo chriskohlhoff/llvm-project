@@ -1050,7 +1050,8 @@ unsigned ContinuationIndenter::getNewLineColumn(const LineState &State) {
   //     ) {
   //       code(); //
   //     }
-  if (Current.is(tok::r_paren) && State.Stack.size() > 1 &&
+  if (!Style.DanglingParenthesis &&
+      Current.is(tok::r_paren) && State.Stack.size() > 1 &&
       (!Current.Next ||
        Current.Next->isOneOf(tok::semi, tok::kw_const, tok::l_brace)))
     return State.Stack[State.Stack.size() - 2].LastSpace;
@@ -1061,10 +1062,16 @@ unsigned ContinuationIndenter::getNewLineColumn(const LineState &State) {
     return State.Stack[State.Stack.size() - 2].LastSpace;
   if (Style.DanglingParenthesis && Current.is(tok::r_paren) &&
       State.Stack.size() > 1)
-    return State.Stack[State.Stack.size() - 2].LastSpace;
+    return State.Stack[State.Stack.size() - 2].LastSpace +
+      ((!State.Stack[State.Stack.size() - 2].IsInArgumentList &&
+        Style.DoubleIndentOutermostArgumentList)
+        ? Style.ContinuationIndentWidth : 0);
   if (Style.DanglingTemplateCloser && Current.is(TT_TemplateCloser) &&
       State.Stack.size() > 1)
-    return State.Stack[State.Stack.size() - 2].LastSpace;
+    return State.Stack[State.Stack.size() - 2].LastSpace +
+      ((!State.Stack[State.Stack.size() - 2].IsInArgumentList &&
+        Style.DoubleIndentOutermostArgumentList)
+        ? Style.ContinuationIndentWidth : 0);
   if (NextNonComment->is(TT_TemplateString) && NextNonComment->closesScope())
     return State.Stack[State.Stack.size() - 2].LastSpace;
   if (Current.is(tok::identifier) && Current.Next &&
@@ -1514,9 +1521,13 @@ void ContinuationIndenter::moveStatePastScopeOpener(LineState &State,
     if (Current.ParameterCount > 1)
       NestedBlockIndent = std::max(NestedBlockIndent, State.Column + 1);
   } else {
-    NewIndent = Style.ContinuationIndentWidth +
-                std::max(State.Stack.back().LastSpace,
-                         State.Stack.back().StartOfFunctionCall);
+    NewIndent =
+        ((!State.Stack.back().IsInArgumentList &&
+            Style.DoubleIndentOutermostArgumentList)
+          ? Style.ContinuationIndentWidth * 2
+          : Style.ContinuationIndentWidth) +
+        std::max(State.Stack.back().LastSpace,
+                 State.Stack.back().StartOfFunctionCall);
 
     // Ensure that different different brackets force relative alignment, e.g.:
     // void SomeFunction(vector<  // break
@@ -1593,6 +1604,7 @@ void ContinuationIndenter::moveStatePastScopeOpener(LineState &State,
   State.Stack.back().BreakBeforeParameter = BreakBeforeParameter;
   State.Stack.back().HasMultipleNestedBlocks =
       (Current.BlockParameterCount > 1);
+  State.Stack.back().IsInArgumentList = true;
 
   if (Style.BraceWrapping.BeforeLambdaBody && Current.Next != nullptr &&
       Current.Tok.is(tok::l_paren)) {

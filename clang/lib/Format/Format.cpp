@@ -644,6 +644,8 @@ template <> struct MappingTraits<FormatStyle> {
     IO.mapOptional("DeriveLineEnding", Style.DeriveLineEnding);
     IO.mapOptional("DerivePointerAlignment", Style.DerivePointerAlignment);
     IO.mapOptional("DisableFormat", Style.DisableFormat);
+    IO.mapOptional("DoubleIndentOutermostArgumentList",
+                   Style.DoubleIndentOutermostArgumentList);
     IO.mapOptional("EmptyLineAfterAccessModifier",
                    Style.EmptyLineAfterAccessModifier);
     IO.mapOptional("EmptyLineBeforeAccessModifier",
@@ -1044,6 +1046,7 @@ FormatStyle getLLVMStyle(FormatStyle::LanguageKind Language) {
   LLVMStyle.DanglingTemplateCloser = false;
   LLVMStyle.DeriveLineEnding = true;
   LLVMStyle.DerivePointerAlignment = false;
+  LLVMStyle.DoubleIndentOutermostArgumentList = false;
   LLVMStyle.EmptyLineAfterAccessModifier = FormatStyle::ELAAMS_Never;
   LLVMStyle.EmptyLineBeforeAccessModifier = FormatStyle::ELBAMS_LogicalBlock;
   LLVMStyle.ExperimentalAutoDetectBinPacking = false;
@@ -1166,6 +1169,7 @@ FormatStyle getGoogleStyle(FormatStyle::LanguageKind Language) {
   GoogleStyle.DanglingParenthesis = false;
   GoogleStyle.DanglingTemplateCloser = false;
   GoogleStyle.DerivePointerAlignment = true;
+  GoogleStyle.DoubleIndentOutermostArgumentList = false;
   GoogleStyle.IncludeStyle.IncludeCategories = {{"^<ext/.*\\.h>", 2, 0, false},
                                                 {"^<.*\\.h>", 1, 0, false},
                                                 {"^<.*", 2, 0, false},
