@@ -1963,6 +1963,20 @@ struct FormatStyle {
   /// \endcode
   bool DanglingParenthesis;
 
+  /// \brief If there is a break after the template opener, also break
+  /// before the template closer
+  /// \code
+  ///   true:
+  ///   template <
+  ///       typename A, typename B
+  ///   >
+  ///
+  ///   false:
+  ///   template <
+  ///       typename A, typename B>
+  /// \endcode
+  bool DanglingTemplateCloser;
+
   /// \brief Analyze the formatted file for the most used line ending (``\r\n``
   /// or ``\n``). ``UseCRLF`` is only used as a fallback if none can be derived.
   bool DeriveLineEnding;

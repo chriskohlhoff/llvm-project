@@ -328,6 +328,9 @@ bool ContinuationIndenter::canBreak(const LineState &State) {
   if(Current.is(tok::r_paren) && !State.Stack.back().BreakBeforeClosingParen)
     return false;
 
+  if(Current.is(TT_TemplateCloser) && !State.Stack.back().BreakBeforeTemplateCloser)
+    return false;
+
   return !State.Stack.back().NoLineBreak;
 }
 
@@ -345,6 +348,8 @@ bool ContinuationIndenter::mustBreak(const LineState &State) {
       Current.closesBlockOrBlockTypeList(Style))
     return true;
   if(State.Stack.back().BreakBeforeClosingParen && Current.is(tok::r_paren))
+    return true;
+  if(State.Stack.back().BreakBeforeTemplateCloser && Current.is(TT_TemplateCloser))
     return true;
   if (Previous.is(tok::semi) && State.LineContainsContinuedForLoopSection)
     return true;
@@ -952,6 +957,9 @@ unsigned ContinuationIndenter::addTokenOnNewLine(LineState &State,
   if (PreviousNonComment && PreviousNonComment->is(tok::l_paren))
     State.Stack.back().BreakBeforeClosingParen = Style.DanglingParenthesis;
 
+  if (PreviousNonComment && PreviousNonComment->is(TT_TemplateOpener))
+    State.Stack.back().BreakBeforeTemplateCloser = Style.DanglingTemplateCloser;
+
   if (State.Stack.back().AvoidBinPacking) {
     // If we are breaking after '(', '{', '<', or this is the break after a ':'
     // to start a member initializater list in a constructor, this should not
@@ -1046,7 +1054,15 @@ unsigned ContinuationIndenter::getNewLineColumn(const LineState &State) {
       (!Current.Next ||
        Current.Next->isOneOf(tok::semi, tok::kw_const, tok::l_brace)))
     return State.Stack[State.Stack.size() - 2].LastSpace;
+  if (!Style.DanglingTemplateCloser &&
+      Current.is(TT_TemplateCloser) && State.Stack.size() > 1 &&
+      (!Current.Next ||
+       Current.Next->isOneOf(tok::semi, tok::kw_const, tok::l_brace)))
+    return State.Stack[State.Stack.size() - 2].LastSpace;
   if (Style.DanglingParenthesis && Current.is(tok::r_paren) &&
+      State.Stack.size() > 1)
+    return State.Stack[State.Stack.size() - 2].LastSpace;
+  if (Style.DanglingTemplateCloser && Current.is(TT_TemplateCloser) &&
       State.Stack.size() > 1)
     return State.Stack[State.Stack.size() - 2].LastSpace;
   if (NextNonComment->is(TT_TemplateString) && NextNonComment->closesScope())

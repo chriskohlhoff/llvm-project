@@ -4151,7 +4151,7 @@ bool TokenAnnotator::canBreakBefore(const AnnotatedLine &Line,
   if (Right.is(tok::r_paren))
     return Style.DanglingParenthesis;
   if (Right.is(TT_TemplateCloser))
-    return false;
+    return Style.DanglingTemplateCloser;
   if (Right.is(tok::r_square) && Right.MatchingParen &&
       Right.MatchingParen->is(TT_LambdaLSquare))
     return false;

@@ -2211,6 +2211,21 @@ the configuration (without a prefix: ``Auto``).
     someLongFunction(
         argument1, argument2);
 
+**DanglingTemplateCloser** (``bool``)
+  If there is a break after the template opener, also break
+  before the template closer
+
+  .. code-block:: c++
+
+    true:
+    template <
+        typename A, typename B
+    >
+
+    false:
+    template <
+        typename A, typename B>
+
 **DeriveLineEnding** (``bool``)
   Analyze the formatted file for the most used line ending (``\r\n``
   or ``\n``). ``UseCRLF`` is only used as a fallback if none can be derived.
